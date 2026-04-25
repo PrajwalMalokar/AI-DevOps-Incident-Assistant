@@ -1,0 +1,19 @@
+Docker Exit Code 137:
+Cause: Container killed because of out-of-memory (OOM).
+Solution: Increase memory limits, optimize application memory usage.
+Prevention: Monitor memory consumption and configure resource limits.
+
+Kubernetes CrashLoopBackOff:
+Cause: Application crashes repeatedly after startup.
+Solution: Check pod logs, verify environment variables, check health probes.
+Prevention: Proper startup testing and readiness checks.
+
+High CPU Usage:
+Cause: Infinite loops, heavy processing, poor scaling.
+Solution: Optimize code, autoscale workloads.
+Prevention: Monitoring and load testing.
+
+CI/CD Pipeline Failure:
+Cause: Dependency issues, incorrect build scripts, environment mismatch.
+Solution: Check logs, verify pipeline YAML, lock dependency versions.
+Prevention: Standardized environments and automated tests.
