@@ -1,8 +1,12 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from models import Incident
+from database import SessionLocal, engine, Base
+from datetime import datetime
 import requests
 app = FastAPI()
 
+Base.metadata.create_all(bind=engine)
 class Query(BaseModel):
     issue: str
 
@@ -49,8 +53,36 @@ def analyze_issue(query:Query):
     )
 
     result = response.json()
+
+    db = SessionLocal()
+    log = Incident(
+        issue = query.issue,
+        context = context,
+        analysis = result["response"],
+        created_at = str(datetime.now())
+    )
+
+    db.add(log)
+    db.commit()
+    db.close()
     return {
         "retrieved_context": context,
         "analysis": result["response"]
     }
+
+@app.get("/history")
+def get_history():
+    db = SessionLocal()
+    incidents = db.query(Incident).all()
+    data = []
+
+    for incident in incidents:
+        data.append({
+            "id": incident.id,
+            "issue": incident.issue,
+            "analysis": incident.analysis,
+            "created_at": incident.created_at
+        })
+    db.close()
+    return data
 
